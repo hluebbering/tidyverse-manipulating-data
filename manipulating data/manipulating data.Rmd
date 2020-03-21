@@ -1,0 +1,532 @@
+---
+title: "Using Tidyvsere to Manipulate Data"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+
+library(gradethis)
+
+library(nycflights13)
+library(dplyr)
+
+library(ggplot2)
+
+tutorial_options(exercise.timelimit = 60, exercise.checker = gradethis::grade_learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Manipulating data
+
+#### Explaining how to manipulate data frames in R using tidyverse 
+
+In this tutorial, we’re focusing on how to use a core tidyverse package to manipulate data: **the dplyr package.**
+
+To explore dplyr’s basic data manipulation methods, we will learn how to use the following functions:
+
+
+* Subset or `filter()` a data frame’s observations by picking their values 
+* Pick variables or `select()` a data frame’s columns
+* Add or `mutate()` variables to a data frame
+* Condense or `summarise()` variables down to a single summary 
+
+
+
+## Filtering or subsetting rows
+
+### 
+
+To filter rows of a data frame, you can use the `filter ()` function with the `filter` argument. For example, here is a downloaded data frame we’ll use: `library(nycflights13)`. 
+
+This data frame includes 336,776 flights that departed from New York City in 2013. The data comes from the US Bureau of Transportation Statistics.
+
+
+```{r table1}
+flights
+#> # A tibble: 336,776 x 19
+#>    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+#>   <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+#> 1  2013     1     1      517            515         2      830            819
+#> 2  2013     1     1      533            529         4      850            830
+#> 3  2013     1     1      542            540         2      923            850
+#> 4  2013     1     1      544            545        -1     1004           1022
+#> 5  2013     1     1      554            600        -6      812            837
+#> 6  2013     1     1      554            558        -4      740            728
+#> # … with 3.368e+05 more rows, and 11 more variables: arr_delay <dbl>,
+#> #   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
+#> #   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+### 
+
+If you wanted to filter this data frame to only include rows of flights that only went out on January 1st, you would do the following:
+
+````markdown
+`r ''````{r filter}
+filter(flights, month == 1, day == 1)
+```
+````
+
+### 
+
+When you run that line of code, dplyr executes the filtering operation and returns a new data frame. 
+
+```{r table2}
+filter(flights, month == 1, day == 1)
+```
+
+
+### 
+
+All dplyr functions never alter their inputs. If you want to save the results, you must use the assignment operator `<-`:
+
+````markdown
+`r ''````{r save-filter}
+jan1 <- filter(flights, month == 1, day == 1)
+```
+````
+
+```{r save}
+jan1 <- filter(flights, month == 1, day == 1)
+```
+
+****************************************************************************
+
+###
+
+If you want to filter the data frame based on more than one condition, you can use **logical operators** discussed in a previous section. 
+
+For example, if you want to only include rows of flights that weren’t delayed (on arrival or departure) by `more than two hours`, you would do the following:
+
+````markdown
+`r ''````{r logical-filter}
+filter(flights, arr_delay <= 120, dep_delay <= 120)
+```
+````
+
+```{r logical}
+filter(flights, arr_delay <= 120, dep_delay <= 120)
+```
+
+
+****************************************************************************
+
+
+### Exercise
+
+Modify the code below to filter the `nycflights13` data frame to only include rows of flights that went out on December 25th:
+
+```{r grade_filter, exercise = TRUE}
+filter(flights, month == 1, day == 1)
+```
+
+```{r grade_filter-solution}
+filter(flights, month == 12, day == 25)
+```
+
+```{r grade_filter-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+
+****************************************************************************
+
+## Selecting or subsetting columns
+
+### 
+
+To select specific columns, you can use the ` select()` function. This function is useful when the dataset contains an abundance of variables. Instead of identifying the filter argument, we can specify the `select` argument to select specific columns.
+
+### 
+
+For example, if you want to create a data frame that only includes the `year` column, you can do the following:
+
+````markdown
+`r ''````{r select-flights}
+  select(flights, year)
+```
+````
+
+
+```{r select-exercise}
+select(flights, year)
+```
+
+###
+
+If you would like to only include both `year`, `month`, and `day` you can do the following:
+
+````markdown
+`r ''````{r select-flights}
+  select(flights, year:month)
+```
+````
+
+```{r select2}
+select(flights, year:day)
+```
+
+
+###
+
+If you would like to include **all** columns _except_ `year`, `month`, and `day` you can use the `-` sign as shown below:
+
+````markdown
+`r ''````{r select-flights}
+  select(flights, -(year:day))
+```
+````
+
+```{r select-flights-day}
+select(flights, -(year:day))
+```
+
+******************************************************************
+
+### Exercise
+
+Create a new data frame called `flights_month` that only includes the `month` column from the `flights` data frame.
+
+```{r grade_select, exercise = TRUE}
+
+```
+
+```{r grade_select-solution}
+select(flights, month)
+```
+
+```{r grade_select-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+
+Create a new data frame called `flights_new` that _filters_ rows to only include rows where `delay` is less than or equal to 2 hours and `selects()` 4 columns, `day`, `dep_time`, `sched_dep_time`, and `dep_delay`.
+
+```{r grade_select2, exercise = TRUE}
+
+```
+
+```{r grade_select2-solution}
+select((flights_new <- filter(flights, arr_delay <= 120, dep_delay <= 120)), day:dep_delay)
+
+
+```
+
+```{r grade_select2-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+
+******************************************************************
+
+## Add variables to a data frame
+
+###
+
+We can add new columns that are functions of existing columns with the `mutate()` function. The mutate() function always adds new columns to the end of the dataset. 
+
+###
+
+For example, consider the subset selected from the flights data as shown below:
+
+````markdown
+`r ''````{r flights_sml}
+  flights_sml <- select(flights, 
+  year:day, 
+  ends_with("delay"), 
+  distance, 
+  air_time
+)
+```
+````
+
+```{r mutate}
+flights_sml <- select(flights, 
+  year:day, 
+  ends_with("delay"), 
+  distance, 
+  air_time
+)
+
+flights_sml
+```
+
+###
+
+We can add two columms to this table using the `mutate()` function as follows:
+
+````markdown
+`r ''````{r mutate}
+
+mutate(flights_sml,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60
+)
+
+```
+````
+
+```{r mutate2}
+mutate(flights_sml,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60
+)
+
+
+```
+
+
+
+###
+
+If you only want to keep the new variables, use transmute():
+
+````markdown
+`r ''````{r transmute}
+transmute(flights,
+  gain = dep_delay - arr_delay,
+  hours = air_time / 60,
+  gain_per_hour = gain / hours
+)
+```
+````
+
+```{r transmute}
+transmute(flights,
+  gain = dep_delay - arr_delay,
+  hours = air_time / 60,
+  gain_per_hour = gain / hours
+)
+
+```
+
+**************************************************
+
+### Exercise 
+
+Using the data `flights_small` below, add the variable `speed` that is equal to `distance / air_time * 60`:
+
+```{r mutate1}
+flights_small<-select(flights, -(year:tailnum))
+flights_small
+
+```
+
+```{r grade_mutate, exercise = TRUE}
+
+```
+
+```{r grade_mutate-solution}
+mutate(flights_small,
+  speed = distance / air_time * 60
+)
+
+
+```
+
+```{r grade_mutate-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+
+*************************************************************************************
+
+
+
+
+## Summarise columns in a data frame
+
+###
+
+In `tidyverse`, you can use functions to summarise observations in a column of a data frame using the `summarise()` function and the `group_by()` function.This changes the data analysis from the complete dataset to individual groups we select. 
+
+###
+
+For example, we can get the average delay per date running the following:
+
+````markdown
+`r ''````{r summary}
+by_day <- group_by(flights, year, month, day)
+summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
+```
+````
+
+```{r summary}
+by_day <- group_by(flights, year, month, day)
+summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+###
+
+Based on all the `dplyr` functions we've learned above, we can summarise observations in a column by another column. 
+
+###
+
+For example, we can explore the relationship between the distance and average delay for each location. 
+
+### 
+
+Prepare the data by:
+
+1. Group flights by destination.
+
+2. Summarise to compute distance, average delay, and number of flights.
+
+###
+
+Use the code as shown below:
+
+````markdown
+`r ''````{r}
+by_dest <- group_by(flights, dest)
+delay <- summarise(by_dest,
+  count = n(),
+  dist = mean(distance, na.rm = TRUE),
+  delay = mean(arr_delay, na.rm = TRUE)
+)
+
+delay <- filter(delay, count > 20, dest != "HNL")
+
+```
+````
+
+```{r summary2}
+by_dest <- group_by(flights, dest)
+delay <- summarise(by_dest,
+  count = n(),
+  dist = mean(distance, na.rm = TRUE),
+  delay = mean(arr_delay, na.rm = TRUE)
+)
+delay <- filter(delay, count > 20, dest != "HNL")
+
+```
+
+
+```{r ggplot}
+ggplot(data = delay, mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1/3) +
+  geom_smooth(se = FALSE)
+
+
+```
+
+###
+
+Rather than giving each data frame a name, we can slow down analysis using the pipe `%>%`.
+
+- The pipe improves the readability of code in a way that you can read left-to-right. 
+
+- We can read it as a series of commands: group, then summarize, then filter.
+
+###
+
+When using aggregation functions, we have an `na.rm = TRUE` argument which removes missing values prior to computation. 
+
+For example here's a summary of the flights `dep_delay mean` grouped by `year`, `month`, and `day`:
+
+````markdown
+`r ''````{r}
+flights %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay, na.rm = TRUE))
+
+```
+````
+
+```{r flights-summary}
+flights %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay, na.rm = TRUE))
+
+```
+
+
+###
+
+Suppose `missing values` represent cancelled flights. We can solve this issue by removing all cancelled flights from the dataset.
+
+````markdown
+`r ''````{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+not_cancelled %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay))
+```
+````
+
+```{r cancel}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+not_cancelled %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay))
+
+```
+
+We now have a subset called `not_cancelled` with no missing values of the `flights` dataset.
+
+###
+
+Here's a plot of the planes (identified by their tail number) that have the highest average delays:
+
+```{r summarize3}
+delays <- not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(
+    delay = mean(arr_delay)
+  )
+
+ggplot(data = delays, mapping = aes(x = delay)) + 
+  geom_freqpoly(binwidth = 10)
+```
+
+###
+
+Whenever you do an `aggregation`, include either a count (n()) or a count of non-missing values.
+
+Here's a scatterplot of number of flights vs. average delay including a count `n=n()`.
+
+```{r count}
+delays <- not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(
+    delay = mean(arr_delay, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(data = delays, mapping = aes(x = n, y = delay)) + 
+  geom_point(alpha = 1/10)
+```
+
+```{r count1} 
+delays %>% 
+  filter(n > 25) %>% 
+  ggplot(mapping = aes(x = n, y = delay)) + 
+    geom_point(alpha = 1/10)
+
+```
+
+***************************************************************************
+
+### Exercise
+
+Using the `flights` data, find the summary of the flights (`distance`) grouped gy `year`, `origin`, `dest`, and `arr_delay`.
+
+```{r avg, exercise = TRUE}
+```
+
+
+```{r flights_summary}
+flights %>% 
+  group_by(year, origin, dest, arr_delay) %>% 
+  summarise(mean = mean(distance, na.rm = TRUE))
+
+```
