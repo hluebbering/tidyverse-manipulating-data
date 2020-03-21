@@ -9,7 +9,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-
+library(remotes)
 library(gradethis)
 
 library(nycflights13)
@@ -21,11 +21,12 @@ tutorial_options(exercise.timelimit = 60, exercise.checker = gradethis::grade_le
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Manipulating data
+
+## <span style="color: teal;">Manipulating data</span>
 
 #### Explaining how to manipulate data frames in R using tidyverse 
 
-In this tutorial, we’re focusing on how to use a core tidyverse package to manipulate data: **the dplyr package.**
+In this tutorial, we’re focusing on how to use a core tidyverse package to manipulate data: <span style="color: green;">**the dplyr package.**</span>
 
 To explore dplyr’s basic data manipulation methods, we will learn how to use the following functions:
 
@@ -36,12 +37,11 @@ To explore dplyr’s basic data manipulation methods, we will learn how to use t
 * Condense or `summarise()` variables down to a single summary 
 
 
-
-## Filtering or subsetting rows
+## <span style="color: teal;">Filtering or subsetting rows</span>
 
 ### 
 
-To filter rows of a data frame, you can use the `filter ()` function with the `filter` argument. For example, here is a downloaded data frame we’ll use: `library(nycflights13)`. 
+<span style="color: purple;">To filter rows of a data frame</span>, you can use the `filter ()` function with the `filter` argument. For example, here is a downloaded data frame we’ll use: `library(nycflights13)`. 
 
 This data frame includes 336,776 flights that departed from New York City in 2013. The data comes from the US Bureau of Transportation Statistics.
 
@@ -64,7 +64,7 @@ flights
 
 ### 
 
-If you wanted to filter this data frame to only include rows of flights that only went out on January 1st, you would do the following:
+If you wanted to <span style="color: purple;">filter</span> this data frame to only include rows of flights that only went out on January 1st, you would do the following:
 
 ````markdown
 `r ''````{r filter}
@@ -83,7 +83,7 @@ filter(flights, month == 1, day == 1)
 
 ### 
 
-All dplyr functions never alter their inputs. If you want to save the results, you must use the assignment operator `<-`:
+All dplyr functions never alter their inputs. If you want to save the results, you must use the assignment operator `<-`
 
 ````markdown
 `r ''````{r save-filter}
@@ -99,7 +99,7 @@ jan1 <- filter(flights, month == 1, day == 1)
 
 ###
 
-If you want to filter the data frame based on more than one condition, you can use **logical operators** discussed in a previous section. 
+If you want to <span style="color: purple;">filter the data frame</span> based on more than one condition, you can use **logical operators** discussed in a previous section. 
 
 For example, if you want to only include rows of flights that weren’t delayed (on arrival or departure) by `more than two hours`, you would do the following:
 
@@ -116,10 +116,10 @@ filter(flights, arr_delay <= 120, dep_delay <= 120)
 
 ****************************************************************************
 
+### <span style="color: green;">Exercise</span>
 
-### Exercise
 
-Modify the code below to filter the `nycflights13` data frame to only include rows of flights that went out on December 25th:
+Modify the code below to <span style="color: purple;">filter</span> the `nycflights13` data frame to only include rows of flights that went out on December 25th:
 
 ```{r grade_filter, exercise = TRUE}
 filter(flights, month == 1, day == 1)
@@ -136,11 +136,11 @@ grade_code("Good job. Don't worry, things will soon get harder.")
 
 ****************************************************************************
 
-## Selecting or subsetting columns
+## <span style="color: teal;">Selecting or subsetting columns</span>
 
 ### 
 
-To select specific columns, you can use the ` select()` function. This function is useful when the dataset contains an abundance of variables. Instead of identifying the filter argument, we can specify the `select` argument to select specific columns.
+To <span style="color: purple;">select specific columns</span>, you can use the ` select()` function. This function is useful when the dataset contains an abundance of variables. Instead of identifying the filter argument, we can specify the `select` argument to select specific columns.
 
 ### 
 
@@ -188,9 +188,9 @@ select(flights, -(year:day))
 
 ******************************************************************
 
-### Exercise
+### <span style="color: green;">Exercise</span>
 
-Create a new data frame called `flights_month` that only includes the `month` column from the `flights` data frame.
+Create a new data frame called `flights_month` that <span style="color: purple;">only includes</span> the `month` column from the `flights` data frame.
 
 ```{r grade_select, exercise = TRUE}
 
@@ -205,7 +205,7 @@ grade_code("Good job. Don't worry, things will soon get harder.")
 ```
 
 
-Create a new data frame called `flights_new` that _filters_ rows to only include rows where `delay` is less than or equal to 2 hours and `selects()` 4 columns, `day`, `dep_time`, `sched_dep_time`, and `dep_delay`.
+Create a new data frame called `flights_new` that <span style="color: purple;">filters the data frame</span> to only include rows where `delay` is less than or equal to 2 hours and `selects()` the following <span style="color: purple;">columns</span>, `day`, `dep_time`, `sched_dep_time`, and `dep_delay`.
 
 ```{r grade_select2, exercise = TRUE}
 
@@ -224,11 +224,13 @@ grade_code("Good job. Don't worry, things will soon get harder.")
 
 ******************************************************************
 
-## Add variables to a data frame
+## <span style="color: teal;">Add variables to a data frame</span>
 
 ###
 
-We can add new columns that are functions of existing columns with the `mutate()` function. The mutate() function always adds new columns to the end of the dataset. 
+We can <span style="color: purple;">add new columns</span> that are functions of existing columns with the `mutate()` function.
+
+The <span style="color: purple;">mutate()</span> function always adds new columns to the end of the dataset. 
 
 ###
 
@@ -284,7 +286,8 @@ mutate(flights_sml,
 
 ###
 
-If you only want to keep the new variables, use transmute():
+If you only want to keep the new variables, use <span style="color: purple;">transmute()</span>:
+
 
 ````markdown
 `r ''````{r transmute}
@@ -307,9 +310,9 @@ transmute(flights,
 
 **************************************************
 
-### Exercise 
+### <span style="color: green;">Exercise</span>
 
-Using the data `flights_small` below, add the variable `speed` that is equal to `distance / air_time * 60`:
+Using the data `flights_small` below, add the variable `speed` that is <span style="color: purple;">equal to</span> `distance / air_time * 60`:
 
 ```{r mutate1}
 flights_small<-select(flights, -(year:tailnum))
@@ -337,17 +340,19 @@ grade_code("Good job. Don't worry, things will soon get harder.")
 *************************************************************************************
 
 
+## <span style="color: teal;">Summarize columns in a data frame</span>
 
-
-## Summarise columns in a data frame
 
 ###
 
-In `tidyverse`, you can use functions to summarise observations in a column of a data frame using the `summarise()` function and the `group_by()` function.This changes the data analysis from the complete dataset to individual groups we select. 
+
+In <span style="color: purple;">tidyverse</span>, you can use functions to summarise observations in a column of a data frame using the `summarise()` function and the `group_by()` function.
+
+This changes the data analysis from the complete dataset to individual groups we select. 
 
 ###
 
-For example, we can get the average delay per date running the following:
+For example, we can get the <span style="color: purple;">average delay per date</span> running the following:
 
 ````markdown
 `r ''````{r summary}
@@ -363,7 +368,7 @@ summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
 
 ###
 
-Based on all the `dplyr` functions we've learned above, we can summarise observations in a column by another column. 
+Based on all the <span style="color: purple;">dplyr</span> functions we've learned above, we can summarise observations in a column by another column. 
 
 ###
 
@@ -373,13 +378,13 @@ For example, we can explore the relationship between the distance and average de
 
 Prepare the data by:
 
-1. Group flights by destination.
+1. <span style="color: purple;">Grouping</span> flights by destination
 
-2. Summarise to compute distance, average delay, and number of flights.
+2. <span style="color: purple;">Summarizing</span> to compute distance, average delay, and number of flights
 
 ###
 
-Use the code as shown below:
+<span style="color: purple;">Use the code as shown below:</span>
 
 ````markdown
 `r ''````{r}
@@ -417,15 +422,15 @@ ggplot(data = delay, mapping = aes(x = dist, y = delay)) +
 
 ###
 
-Rather than giving each data frame a name, we can slow down analysis using the pipe `%>%`.
+Rather than giving each data frame a name, we can slow down analysis using the <span style="color: purple;">pipe</span> `%>%`.
 
-- The pipe improves the readability of code in a way that you can read left-to-right. 
+- The pipe improves the readability of code in a way that you can read left-to-right
 
-- We can read it as a series of commands: group, then summarize, then filter.
+- We can read it as a series of commands: group, then summarize, then filter
 
 ###
 
-When using aggregation functions, we have an `na.rm = TRUE` argument which removes missing values prior to computation. 
+When using <span style="color: purple;">aggregation functions</span>, we have an `na.rm = TRUE` argument that removes missing values before computation
 
 For example here's a summary of the flights `dep_delay mean` grouped by `year`, `month`, and `day`:
 
@@ -471,11 +476,12 @@ not_cancelled %>%
 
 ```
 
-We now have a subset called `not_cancelled` with no missing values of the `flights` dataset.
+We now have a subset called `not_cancelled` with <span style="color: purple;">no missing values</span> from the `flights` dataset.
 
 ###
 
-Here's a plot of the planes (identified by their tail number) that have the highest average delays:
+
+Here's a plot of the planes (<span style="color: purple;">identified by their tail number</span>) that have the highest average delays:
 
 ```{r summarize3}
 delays <- not_cancelled %>% 
@@ -490,9 +496,10 @@ ggplot(data = delays, mapping = aes(x = delay)) +
 
 ###
 
-Whenever you do an `aggregation`, include either a count (n()) or a count of non-missing values.
+Whenever you do an `aggregation`, include either a **count** `n()` or a count of non-missing values.
 
-Here's a scatterplot of number of flights vs. average delay including a count `n=n()`.
+
+Here's a scatterplot of <span style="color: purple;">number of flights vs. average delay</span> including a count `n=n()`.
 
 ```{r count}
 delays <- not_cancelled %>% 
@@ -516,9 +523,9 @@ delays %>%
 
 ***************************************************************************
 
-### Exercise
+### <span style="color: green;">Exercise</span>
 
-Using the `flights` data, find the summary of the flights (`distance`) grouped gy `year`, `origin`, `dest`, and `arr_delay`.
+Using the `flights` data, find the <span style="color: purple;">summary of the flights mean</span> `distance` grouped by `year`, `origin`, `dest`, and `arr_delay`.
 
 ```{r avg, exercise = TRUE}
 ```
