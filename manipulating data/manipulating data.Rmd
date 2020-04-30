@@ -18,7 +18,7 @@ library(dplyr)
 library(ggplot2)
 
 tutorial_options(exercise.timelimit = 60, exercise.checker = gradethis::grade_learnr)
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set()
 ```
 
 
@@ -66,11 +66,11 @@ flights
 
 If you wanted to <span style="color: purple;">filter</span> this data frame to only include rows of flights that only went out on January 1st, you would do the following:
 
-````markdown
-`r ''````{r filter}
+
+```{r filter, eval = FALSE}
 filter(flights, month == 1, day == 1)
 ```
-````
+
 
 ### 
 
@@ -85,11 +85,6 @@ filter(flights, month == 1, day == 1)
 
 All dplyr functions never alter their inputs. If you want to save the results, you must use the assignment operator `<-`
 
-````markdown
-`r ''````{r save-filter}
-jan1 <- filter(flights, month == 1, day == 1)
-```
-````
 
 ```{r save}
 jan1 <- filter(flights, month == 1, day == 1)
@@ -103,11 +98,6 @@ If you want to <span style="color: purple;">filter the data frame</span> based o
 
 For example, if you want to only include rows of flights that weren’t delayed (on arrival or departure) by `more than two hours`, you would do the following:
 
-````markdown
-`r ''````{r logical-filter}
-filter(flights, arr_delay <= 120, dep_delay <= 120)
-```
-````
 
 ```{r logical}
 filter(flights, arr_delay <= 120, dep_delay <= 120)
@@ -146,12 +136,6 @@ To <span style="color: purple;">select specific columns</span>, you can use the 
 
 For example, if you want to create a data frame that only includes the `year` column, you can do the following:
 
-````markdown
-`r ''````{r select-flights}
-  select(flights, year)
-```
-````
-
 
 ```{r select-exercise}
 select(flights, year)
@@ -160,12 +144,6 @@ select(flights, year)
 ###
 
 If you would like to only include both `year`, `month`, and `day` you can do the following:
-
-````markdown
-`r ''````{r select-flights}
-  select(flights, year:month)
-```
-````
 
 ```{r select2}
 select(flights, year:day)
@@ -176,11 +154,6 @@ select(flights, year:day)
 
 If you would like to include **all** columns _except_ `year`, `month`, and `day` you can use the `-` sign as shown below:
 
-````markdown
-`r ''````{r select-flights}
-  select(flights, -(year:day))
-```
-````
 
 ```{r select-flights-day}
 select(flights, -(year:day))
@@ -236,16 +209,6 @@ The <span style="color: purple;">mutate()</span> function always adds new column
 
 For example, consider the subset selected from the flights data as shown below:
 
-````markdown
-`r ''````{r flights_sml}
-  flights_sml <- select(flights, 
-  year:day, 
-  ends_with("delay"), 
-  distance, 
-  air_time
-)
-```
-````
 
 ```{r mutate}
 flights_sml <- select(flights, 
@@ -262,16 +225,7 @@ flights_sml
 
 We can add two columms to this table using the `mutate()` function as follows:
 
-````markdown
-`r ''````{r mutate}
 
-mutate(flights_sml,
-  gain = dep_delay - arr_delay,
-  speed = distance / air_time * 60
-)
-
-```
-````
 
 ```{r mutate2}
 mutate(flights_sml,
@@ -289,15 +243,7 @@ mutate(flights_sml,
 If you only want to keep the new variables, use <span style="color: purple;">transmute()</span>:
 
 
-````markdown
-`r ''````{r transmute}
-transmute(flights,
-  gain = dep_delay - arr_delay,
-  hours = air_time / 60,
-  gain_per_hour = gain / hours
-)
-```
-````
+
 
 ```{r transmute}
 transmute(flights,
@@ -354,13 +300,6 @@ This changes the data analysis from the complete dataset to individual groups we
 
 For example, we can get the <span style="color: purple;">average delay per date</span> running the following:
 
-````markdown
-`r ''````{r summary}
-by_day <- group_by(flights, year, month, day)
-summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
-```
-````
-
 ```{r summary}
 by_day <- group_by(flights, year, month, day)
 summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
@@ -386,19 +325,6 @@ Prepare the data by:
 
 <span style="color: purple;">Use the code as shown below:</span>
 
-````markdown
-`r ''````{r}
-by_dest <- group_by(flights, dest)
-delay <- summarise(by_dest,
-  count = n(),
-  dist = mean(distance, na.rm = TRUE),
-  delay = mean(arr_delay, na.rm = TRUE)
-)
-
-delay <- filter(delay, count > 20, dest != "HNL")
-
-```
-````
 
 ```{r summary2}
 by_dest <- group_by(flights, dest)
@@ -434,14 +360,7 @@ When using <span style="color: purple;">aggregation functions</span>, we have an
 
 For example here's a summary of the flights `dep_delay mean` grouped by `year`, `month`, and `day`:
 
-````markdown
-`r ''````{r}
-flights %>% 
-  group_by(year, month, day) %>% 
-  summarise(mean = mean(dep_delay, na.rm = TRUE))
 
-```
-````
 
 ```{r flights-summary}
 flights %>% 
@@ -455,16 +374,8 @@ flights %>%
 
 Suppose `missing values` represent cancelled flights. We can solve this issue by removing all cancelled flights from the dataset.
 
-````markdown
-`r ''````{r}
-not_cancelled <- flights %>% 
-  filter(!is.na(dep_delay), !is.na(arr_delay))
 
-not_cancelled %>% 
-  group_by(year, month, day) %>% 
-  summarise(mean = mean(dep_delay))
-```
-````
+
 
 ```{r cancel}
 not_cancelled <- flights %>% 
